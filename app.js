@@ -45,17 +45,13 @@ const defaultMovies = [
 
 async function fetchMovies(searchTerm) {
   try {
-    const url = `https://www.omdbapi.com/?apikey=4525bdf1&s=${searchTerm}`;
-    console.log("Fetching from:", url);
-
-    const response = await fetch(url);
+    const response = await fetch(
+      `https://www.omdbapi.com/?apikey=4525bdf1&s=${searchTerm}`,
+    );
     const data = await response.json();
 
-    console.log("API Response:", data);
-
-    return data.Search || [];
+    return data.Search;
   } catch (error) {
-    console.error("Fetch error:", error);
     return null;
   }
 }
@@ -65,8 +61,8 @@ async function renderDefaultMovies() {
   const searchResultText = document.querySelector(".movies__search__result");
   const searchTitle = document.querySelector(".movies__title__top");
 
-    movieList.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i>`;
-    await new Promise(resolve => setTimeout(resolve, 200));
+  movieList.innerHTML = `<i class="fa-solid fa-spinner fa-spin movie__list__spinner"></i>`;
+  await new Promise((resolve) => setTimeout(resolve, 200));
 
   // Generate HTML for default movies
   const moviesHTML = defaultMovies
@@ -105,13 +101,11 @@ async function renderMovie(searchTerm = "") {
     const searchResultText = document.querySelector(".movies__search__result");
     const searchTitle = document.querySelector(".movies__title__top");
 
-    // Get search term from input if not provided
     let finalSearchTerm = searchTerm;
-    if (!finalSearchTerm && movieSearchInput) {
-      finalSearchTerm = movieSearchInput.value.trim();
-    }
+    finalSearchTerm = movieSearchInput.value;
 
-    movieList.innerHTML = `<i class="fa-solid fa-spinner fa-spin" style="font-size: 48px; color: white;"></i>`;
+    // Add Spinner before page loads in
+    movieList.innerHTML = `<i class="fa-solid fa-spinner fa-spin movie__list__spinner"></i>`;
 
     const movies = await fetchMovies(finalSearchTerm);
 
@@ -120,20 +114,13 @@ async function renderMovie(searchTerm = "") {
       searchResultText.textContent = `"${finalSearchTerm}"`;
       searchResultText.style.display = "block";
     }
-    if (searchTitle) {
-      searchTitle.style.display = "block";
-    }
 
+    // Limits the results to display 6 movies max
     const limitedMovies = movies.slice(0, 6);
 
     // Generate HTML for each movie
     const moviesHTML = limitedMovies
       .map((movie) => {
-        if (!movie || !movie.Title) {
-          console.warn("Invalid movie object:", movie);
-          return "";
-        }
-
         return `<div class="movie">
                     <figure class="movie__image__wrapper">
                         <img src="${movie.Poster}" 
@@ -161,71 +148,63 @@ async function renderMovie(searchTerm = "") {
       .filter((html) => html !== "")
       .join("");
 
-    movieList.innerHTML =
-      moviesHTML || '<p style="color: white;">No valid movies to display</p>';
+    movieList.innerHTML = moviesHTML;
   } catch (error) {
-    console.error("Error in renderMovie:", error);
-    const movieList = document.querySelector("#movie__list");
-    if (movieList) {
-      movieList.innerHTML = `<p style="color: white; font-size: 24px; text-align: center; width: 100%; padding: 40px;">Error loading movies: ${error.message}</p>`;
-    }
+    alert(error);
   }
 }
 
-
 document.addEventListener("DOMContentLoaded", function () {
-  console.log("DOM loaded, initializing search...");
-
   const searchInput = document.querySelector("#movie__search");
   const searchIcon = document.querySelector(".movie__background__search");
   const navSearchInput = document.querySelector(".nav__input__text");
   const navSearchIcon = document.querySelector(".nav__search");
 
-
   renderDefaultMovies();
 
   // Search when user presses Enter
   if (navSearchIcon && navSearchInput) {
-    navSearchIcon.addEventListener('click', function() {
-      navSearchInput.classList.toggle('active');
-      
+    navSearchIcon.addEventListener("click", function () {
+      navSearchInput.classList.toggle("active");
+      navSearchIcon.classList.toggle("active");
+
       // Focus the input when it opens
-      if (navSearchInput.classList.contains('active')) {
+      if (navSearchInput.classList.contains("active")) {
         navSearchInput.focus();
       }
     });
-    
+
     // Search when Enter is pressed in nav input
-    navSearchInput.addEventListener('keypress', function(e) {
-      if (e.key === 'Enter' && navSearchInput.value.trim()) {
-        // Copy the search to main input and trigger search
+    navSearchInput.addEventListener("keypress", function (e) {
+      if (e.key === "Enter" && navSearchInput.value) {
         searchInput.value = navSearchInput.value;
         renderMovie();
       }
     });
-    
+
     // Close nav search when clicking outside
-    document.addEventListener('click', function(e) {
-      if (!navSearchInput.contains(e.target) && !navSearchIcon.contains(e.target)) {
-        navSearchInput.classList.remove('active');
+    document.addEventListener("click", function (e) {
+      if (
+        !navSearchInput.contains(e.target) &&
+        !navSearchIcon.contains(e.target)
+      ) {
+        navSearchInput.classList.remove("active");
+        navSearchIcon.classList.remove("active");
       }
     });
   }
-  
 
   if (searchInput) {
-    searchInput.addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') {
-        console.log("Enter pressed, searching...");
+    searchInput.addEventListener("keypress", function (e) {
+      if (e.key === "Enter") {
         renderMovie();
       }
     });
   }
-  
+
   // Search when user clicks the main search icon
   if (searchIcon) {
-    searchIcon.addEventListener('click', function() {
-      console.log("Search icon clicked");
+    searchIcon.addEventListener("click", function () {
       renderMovie();
     });
   }
