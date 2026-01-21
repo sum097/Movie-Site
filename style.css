@@ -13,7 +13,6 @@ a {
   scroll-behavior: smooth;
 }
 
-
 .movie__list__spinner {
   font-size: 48px;
   color: white;
@@ -23,25 +22,24 @@ a {
   animation: spin 1000ms infinite;
 }
 
-@keyframes spin{
-  0%{
+@keyframes spin {
+  0% {
     rotate: 0deg;
   }
-  100%{
+  100% {
     rotate: 360deg;
   }
 }
 
-
-body{
+body {
   background-color: rgba(0, 0, 0, 0.86);
 }
 
-#header{
+#header {
   background-image: url(assets/moviebackground2.jpg);
   background-position: center;
   background-size: 100% auto;
-  background-attachment: fixed
+  background-attachment: fixed;
 }
 
 /* Movie Nav section */
@@ -118,7 +116,7 @@ body{
   background-color: transparent;
   color: #fff;
   border: none;
-  
+
   transition: width 500ms ease;
   cursor: default;
 }
@@ -185,6 +183,10 @@ body{
 }
 
 .span__title {
+  color: red;
+}
+
+.span__title2 {
   color: red;
 }
 
@@ -346,17 +348,17 @@ body{
   color: #fff;
 }
 
-.movie__info1{
+.movie__info1 {
   margin-top: 60px;
 }
 
 .movie__title {
-    font-weight: 200;
-    font-size: 14px;
-    margin: 8px 0 24px 0;
-    padding: 0 8px;
-    color: #fff;
-    text-align: center;
+  font-weight: 200;
+  font-size: 14px;
+  margin: 8px 0 24px 0;
+  padding: 0 8px;
+  color: #fff;
+  text-align: center;
 }
 
 .movie__image__wrapper:hover .movie__image {
@@ -373,3 +375,58 @@ body{
   opacity: 100%;
 }
 
+@media (max-width: 640px) {
+  /* Title */
+  .span__title2,
+  .movie__background__para {
+    font-size: 18px;
+  }
+
+  .movie__background__title,
+  .span__title {
+    font-size: 40px;
+  }
+
+  .movie__background__input {
+    padding: 18px 20px 15px 15px;
+    font-size: 18px;
+  }
+
+  .movie__background__search {
+    font-size: 22px;
+  }
+}
+
+@media (max-width: 640px) {
+  /* Nav */
+
+  .nav__logo,
+  .nav__search {
+    margin-right: 8px;
+    display: none;
+  }
+
+  .nav__left,
+  .nav__right {
+    margin-top: 20px;
+  }
+
+  .nav__left {
+    transform: translateX(-15px);
+  }
+
+  .nav__link {
+    font-size: 16px;
+  }
+
+  /* Movie List */
+}
+
+@media (max-width: 768px) {
+  .movies__list {
+    width: 120%;
+  }
+  .movie {
+    width: 180px;
+  }
+}
